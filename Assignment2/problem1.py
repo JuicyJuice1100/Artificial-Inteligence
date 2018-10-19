@@ -22,9 +22,7 @@ def readFile(fileName, dictionary):
                 finish = line #gets the goal point
             else:  # reads the map
                 line = list(line)
-                # width = len(line) #gets the width of map
                 for j, char in enumerate(line): #reads map char by char
-                    # if(j < width):
                     dictionary.update(createNode(i, j, char))
     dictionary['start'] = start
     dictionary['finish'] = finish
@@ -40,7 +38,6 @@ def createNeighborsHelper(i, j, dictionary):
 def createNeighbors(dictionary):
     copy = dictionary.copy()
     for key, value in dictionary.items():
-        print(value)
         if(key == 'start' or key == 'finish'):
             copy[key] = value
         elif(int(value) > 0):
@@ -51,7 +48,7 @@ def main():
     dictionary = {}
     dictionary = readFile(openFile(), dictionary)
     dictionary = createNeighbors(dictionary)
-    
-    print(dictionary)
+
+    # TODO: use given utils to answer questions
     
 main()
