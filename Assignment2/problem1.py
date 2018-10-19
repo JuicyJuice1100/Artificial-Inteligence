@@ -15,18 +15,17 @@ def openFile():
 def readFile(fileName, dictionary):
     with open(fileName) as fileobj:
         for i, line in enumerate(fileobj):
+            line = line.rstrip()
             if(i == 0): # gets the starting point
-                start = line.rstrip()
+                start = line
             elif(i == 1):
-                finish = line.rstrip() #gets the goal point
-                width = len(line) #gets the width of map
+                finish = line #gets the goal point
             else:  # reads the map
+                line = list(line)
+                # width = len(line) #gets the width of map
                 for j, char in enumerate(line): #reads map char by char
-                    #TODO: create a dictionary/json/turn map into an array
-                    if(j < width):
-                        dictionary.update(createNode(i, j, int(char)))
-                    else:
-                        dictionary.update(createNode(i, j, 0))
+                    # if(j < width):
+                    dictionary.update(createNode(i, j, char))
     dictionary['start'] = start
     dictionary['finish'] = finish
     return dictionary
@@ -41,6 +40,7 @@ def createNeighborsHelper(i, j, dictionary):
 def createNeighbors(dictionary):
     copy = dictionary.copy()
     for key, value in dictionary.items():
+        print(value)
         if(key == 'start' or key == 'finish'):
             copy[key] = value
         elif(int(value) > 0):
