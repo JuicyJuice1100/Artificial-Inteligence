@@ -296,6 +296,26 @@ class GraphProblem(Problem):
         else:
             return infinity
 
+class ManhattanProblem(Problem):
+    "The problem of searching a graph from one node to another."
+    def __init__(self, initial, goal, graph):
+        Problem.__init__(self, initial, goal)
+        self.graph = graph
+
+    def actions(self, A):
+        "The actions at a graph node are just its neighbors."
+        return self.graph.get(A).keys()
+
+    def result(self, state, action):
+        "The result of going to a neighbor is just that neighbor."
+        return action
+
+    def path_cost(self, cost_so_far, A, action, B):
+        return cost_so_far + (self.graph.get(A,B) or infinity)
+
+    def h(self, node):
+        return self.path_cost(0, node, self.actions, self.goal)
+
 #______________________________________________________________________________
 # Code to compare searchers on various problems.
 class InstrumentedProblem(Problem):
