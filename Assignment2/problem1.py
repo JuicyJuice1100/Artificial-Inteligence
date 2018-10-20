@@ -8,8 +8,6 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-problem = ""
-
 def openFile():
     root = tk.Tk()
     root.withdraw()
@@ -34,7 +32,6 @@ def readFile(fileName, dictionary):
                     dictionary.update(createNode(i, j, int(char)))
     dictionary['start'] = start
     dictionary['finish'] = finish
-    problem = fileName
     return dictionary
 
 def createNode(i, j, char):
@@ -75,7 +72,7 @@ def main():
 
     # TODO: use given utils to answer questions
     compare_searchers(problems=[GraphProblem(str(start), str(goal), graph)],
-        header=['Algorithm', problem],
+        header=['Algorithm', 'problem 1'],
         searchers=[uniform_cost_search]
     )
     
