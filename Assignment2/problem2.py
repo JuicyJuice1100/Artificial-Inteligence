@@ -1,7 +1,9 @@
 from search import Problem
 from utils import probability, argmax, weighted_sample_with_replacement
+import time
 import random
 
+generationCount = 0
 #______________________________________________________________________________
 #Genetic algorithms
 
@@ -16,6 +18,7 @@ def genetic_search(problem, fitness_fn, ngen=1000, pmut=0.1):
     return genetic_algorithm(states, problem.value, ngen, pmut)
     
 def genetic_algorithm(population, fitness_fn, ngen=1000, pmut=0.1):
+    global generationCount
     highest = 0
     highestEvolved = None
     for i in range(ngen):
@@ -74,7 +77,9 @@ class NQueenState(GAState):
 
     def mutate(self):
         '''Implement this method'''
-        override
+        c = random.randrange(len(self.genes))
+        self.genes[c] = ( random.randrange(0, len(self.genes)), c )
+
         
 class NQueenProblem(Problem):
     '''
@@ -95,11 +100,25 @@ class NQueenProblem(Problem):
         Returns the neighbors of a given state. You must implement this so that the
         neighbors are from the "neighborhood" and are not an enormous set.
         '''
-        override
+        neighbors = []
+        # prioritive moving up vs moving down
+        for i, j in enumerate(state.genes):
+            temp = state.genes.copy() 
+            if(j[0] - 1 > 0):
+                # create neighbor that moves i up               
+                temp[i] = (j[0] - 1, j[0])
+                neighbors.append(temp)
+            else:
+                # move i down for neighbor
+                temp[i] = (j[0] + 1, j[0])
+                neighbors.append(temp)
+        
+        return neighbors
+
     
     def result(self, state, action):
         ''' Modify this if your result state is different from your action'''
-        return action
+        return NQueenState(action)
 
     def value(self, state):
         '''
@@ -108,7 +127,12 @@ class NQueenProblem(Problem):
         The higher the better with the maximum being (n*(n-1))/2 
         Remember, you must look at state.genes
         '''
-        override
+        nonConflicts = 0
+        for i, j in enumerate(state.genes[:-1]):
+            if(not self.conflict(j[0], j[1], state.genes[i+1][0], state.genes[i+1][1])):
+                nonConflicts += 1
+
+        return nonConflicts
 
     def conflict(self, row1, col1, row2, col2):    
         '''
@@ -166,13 +190,27 @@ class ExampleProblem(Problem):
         '''
         return state.genes.count(1) + 1
 
+def genNProblems(n = 8, time = 3):
+    global generationCount
+    timeEnd = time + 60 * 3 # will run for 3 min
+    for i in range(n, n+100):
+        if(time > timeEnd):
+            break
+        generationCount = 0
+        gp = NQueenProblem(i, NQueenState([(random.randint(0, i), i) for k in range(i)]))
+        goal = genetic_search(gp, NQueenProblem.value, ngen=100, pmut=0.1)
+        print("Goal = ", goal)
+        print(generationCount)
+
          
 #______________________________________________________________________________   
 def main():
      
-    gp = ExampleProblem(ExampleState([0,0,0,0,0,0,0,0])) 
-    goal = genetic_search(gp, ExampleProblem.value, ngen=100, pmut=0.1)
-    print("Goal = ",goal)    
-    print()
+    # gp = ExampleProblem(ExampleState([0,0,0,0,0,0,0,0])) 
+    # goal = genetic_search(gp, ExampleProblem.value, ngen=100, pmut=0.1)
+    # print("Goal = ",goal)    
+    # print()
+
+    genNProblems()
 
 main()

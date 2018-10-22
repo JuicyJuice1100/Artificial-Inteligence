@@ -61,8 +61,7 @@ def graphHelper():
     dictionary = readFile(openFile(), dictionary)
     start = tuple(dictionary.pop('start'))
     goal = tuple(dictionary.pop('finish'))
-    # goal = tuple((1,2))
-    # dictionary = {k:v for k, v in dictionary.items() if v != 0}
+
     dictionary = createNeighbors(dictionary)
     return (start, goal, UndirectedGraph(dictionary))
 
@@ -72,15 +71,16 @@ def main():
     L2 = graphHelper()
     L3 = graphHelper()
 
-    # TODO: use given utils to answer questions
+    print("Manhattan")
     compare_searchers(problems=[InstrumentedProblem(ManhattanProblem(L1[0], L1[1], L1[2])), InstrumentedProblem(ManhattanProblem(L2[0], L2[1], L2[2])), InstrumentedProblem(ManhattanProblem(L3[0], L3[1], L3[2]))],
         header=['Algorithm', "L1", "L2", "L3"],
         searchers=[uniform_cost_search, greedy_best_first_graph_search, astar_search]
     )
 
-    # compare_searchers(problems=[ManhattanProblem(start, goal, graph)],
-    #     header=['Algorithm', "Problem 1"],
-    #     searchers=[uniform_cost_search, greedy_best_first_graph_search, astar_search]
-    # )
+    print("Euclidean")
+    compare_searchers(problems=[InstrumentedProblem(GraphProblem(L1[0], L1[1], L1[2])), InstrumentedProblem(GraphProblem(L2[0], L2[1], L2[2])), InstrumentedProblem(GraphProblem(L3[0], L3[1], L3[2]))],
+        header=['Algorithm', "L1", "L2", "L3"],
+        searchers=[uniform_cost_search, greedy_best_first_graph_search, astar_search]
+    )
     
 main()

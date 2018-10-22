@@ -314,7 +314,8 @@ class ManhattanProblem(Problem):
         return cost_so_far + (self.graph.get(A,B) or infinity)
 
     def h(self, node):
-        return self.path_cost(0, node, self.actions, self.goal)
+        # return self.path_cost(0, node, self.actions, self.goal)
+        return abs(self.goal[1] - node.state[1]) + abs(self.goal[0] - node.state[0])
 
 #______________________________________________________________________________
 # Code to compare searchers on various problems.
