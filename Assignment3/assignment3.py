@@ -44,14 +44,17 @@ def createColumns(variable):
         columns[i] = column
     variable[1] = columns # 1 = columns
 
-def filterUnaryConstraints(domain):
-    return {item for item in domain if item.count(1) == item.count(0)}
+def filterUnaryConstraints(domains):
+    return {item for item in domains if not (any(len(list(group)) > 2 for k, group in itertools.groupby(item))) and (item.count(1) == item.count(0))}
+
+def constraints(A, a, B, b):
+
 
 def main():
     variable = {}
     readFile(openFile(), variable)
-    domain = filterUnaryConstraints({tuple(i) for i in itertools.product([0, 1], repeat=len(variable[0]))})
-    print(domain)
+    domains = filterUnaryConstraints({tuple(i) for i in itertools.product([0, 1], repeat=len(variable[0]))})
+    print(domains)
     print(variable)
 
 main()
