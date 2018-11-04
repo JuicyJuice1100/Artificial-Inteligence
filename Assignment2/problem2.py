@@ -2,6 +2,12 @@ from search import Problem
 from utils import probability, argmax, weighted_sample_with_replacement
 import time
 import random
+import csv
+
+# Conclusion
+# As a conclusion from the data I have noticed that, in general, as N goes up the number of generations needed to find a goal state goes up.
+# This is not always true as there a couple outliers but in general, if this were ploted, we would see a relatively straight line going up with 
+# a positive slope. 
 
 generationCount = 0
 #______________________________________________________________________________
@@ -38,6 +44,7 @@ def genetic_algorithm(population, fitness_fn, ngen=1000, pmut=0.1):
         if currentHigh > highest:    
             highest = currentHigh
             highestEvolved = currentEvolved
+            generationCount += 1
     return highestEvolved
     
     #Pure GA might return this instead        
@@ -190,17 +197,21 @@ class ExampleProblem(Problem):
         '''
         return state.genes.count(1) + 1
 
-def genNProblems(n = 8, time = 3):
+def genNProblems(n = 8, lengthOfTime = 5):
     global generationCount
-    timeEnd = time + 60 * 3 # will run for 3 min
-    for i in range(n, n+100):
-        if(time > timeEnd):
-            break
-        generationCount = 0
-        gp = NQueenProblem(i, NQueenState([(random.randint(0, i), i) for k in range(i)]))
-        goal = genetic_search(gp, NQueenProblem.value, ngen=100, pmut=0.1)
-        print("Goal = ", goal)
-        print(generationCount)
+    timeEnd = time.time() + 60 * lengthOfTime # will run for 3 min by default
+    with open('results.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        for i in range(n, n+100):
+            if(time.time() > timeEnd):
+                break
+            generationCount = 0
+            gp = NQueenProblem(i, NQueenState([(random.randint(0, i), i) for k in range(i)]))
+            goal = genetic_search(gp, NQueenProblem.value, ngen=100, pmut=0.1)
+
+            writer.writerow(['N = ' + str(i)])
+            writer.writerow(['Goal = '] + goal.genes)
+            writer.writerow(['Generation Count = ' + str(generationCount)] )
 
          
 #______________________________________________________________________________   
