@@ -78,7 +78,6 @@ def constraints(A, a, B, b):
     if(A[0] == B[0]):
         return a != b
 
-
 def printAnswer(result, length):
     for i in range(0, length):
         for j in result['r' + str(i)]:
@@ -92,9 +91,6 @@ def main():
     domains = filterUnaryConstraints({i for i in itertools.product([0, 1], repeat=length)})
     neighbors = createNeighbors(dictionary,length)
     dictionary = createDomain(dictionary, domains)
-
-    # setRowDomains(dictionary['Rows'])
-    # domain = UniversalDict(domain)
 
     problem = CSP(list(dictionary.keys()), dictionary, neighbors, constraints)
     result = backtracking_search(problem,select_unassigned_variable=mrv,order_domain_values=lcv,inference=mac) 
