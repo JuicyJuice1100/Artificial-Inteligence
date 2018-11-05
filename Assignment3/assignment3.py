@@ -52,23 +52,19 @@ def createDictionaryWithKeys(dictionary):
     for key, value in enumerate(dictionary):
         keyDictionary[key] = value
     return keyDictionary
-    
-def constraints(A, a, B, b):
-    if(A == B):
-        return (a == b)
 
 def createNeighbors(dictionary, length):
     neighbors = {}
     for key in list(dictionary.keys())[:length]:
-        neighbors[key] = [k for k in list(dictionary)[:length] if k != key]
+        neighbors[key] = {k for k in list(dictionary)[:length] if k != key}
     for key in list(dictionary.keys())[length:]:
-        neighbors[key] = [k for k in list(dictionary)[length:] if k != key]
+        neighbors[key] = {k for k in list(dictionary)[length:] if k != key}
     return neighbors
 
 def createDomain(dictionary, domains):
     temp = dictionary.copy()
     for key, value in temp.items():
-        temp[key] = [domain for domain in domains if shrinkDomain(value, domain)]
+        temp[key] = {domain for domain in domains if shrinkDomain(value, domain)}
     return temp
 
 def shrinkDomain(value, domain):
@@ -76,10 +72,18 @@ def shrinkDomain(value, domain):
         if(j != 2):
             if(j != domain[i]):
                 return False
-            # for item in domains:
-            #     if(j != item[i]):
-            #         return False
     return True
+
+def constraints(A, a, B, b):
+    if(A[0] == B[0]):
+        return a != b
+
+
+def printAnswer(result, length):
+    for i in range(0, length):
+        for j in result['r' + str(i)]:
+            print(j, end='')
+        print()
 
 def main():
     dictionary = {}
@@ -91,12 +95,9 @@ def main():
 
     # setRowDomains(dictionary['Rows'])
     # domain = UniversalDict(domain)
-    print(neighbors)
-    print(domains)
-    print(dictionary)
 
-    problem = CSP(list(dictionary.keys()), UniversalDict(domains), neighbors, constraints)
+    problem = CSP(list(dictionary.keys()), dictionary, neighbors, constraints)
     result = backtracking_search(problem,select_unassigned_variable=mrv,order_domain_values=lcv,inference=mac) 
-    print(result)
+    printAnswer(result, length)
 
 main()
