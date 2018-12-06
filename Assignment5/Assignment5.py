@@ -1,38 +1,33 @@
 
 from games import Game, play_game
-from games import query_player, random_player, alphabeta_full_player,alphabeta_player
+from games import query_player, random_player, alphabeta_full_player,alphabeta_player,intelligent_player
 from utils import Dict, Struct, update, if_, num_or_str
 
 #_______________________________________________
-# Tic Tac Toe
+# Connect 4
 
-#Player for tic_tac_toe, more robust than default query player
-def tic_tac_query_player(game, state):
-    "Make a move by querying standard input."
-    tryAgain = True
-    while tryAgain:
-	    game.display(state)
-	    val = num_or_str(input('Your move, in format x,y (ranging from 1-3): '))
-	    tmp = tuple(int(item) for item in val.split(',') if item.strip())
-	    if ((tmp[0]>=1 and tmp[0]<=3) and (tmp[1]>=1 and tmp[1]<=3)):
-	    	if tmp in state.moves:
-	    		tryAgain=False
-	    	else:
-	    		print("Illegal move, try again")
-	    else:
-	    	print("Input(s) out of bounds, try again")
-    return tmp
+#query player for connect 4
+# def connectFourQueryplayer(game, state):
+#     while True:
+#         game.display(state)
+#         val = num_or_str(input('Your move, in format y (ranging from 1-7): '))
+#         for x, y in state.moves:
+#             if y == val:
+#                 return (x, y)
+#         print("Illegal move, try again")
+
+def printBetweenRow(self):
+    #print between rows
+    print("+",end="")
+    for x in range(1, self.v+1):
+        print("--+", end="")
+    print()
     
-class TicTacToe(Game):
-    """Play TicTacToe on an h x v board with k in a line required to win, 
-    and Max (first player) playing 'X'.
-    A state has the player to move, a cached utility, a list of moves in
-    the form of a list of (x, y) positions, and a board, in the form of
-    a dict of {(x, y): Player} entries, where Player is 'X' or 'O'."""
-    def __init__(self, h=3, v=3, k=3):
+class ConnectFour(Game):
+    def __init__(self, h=6, v=7, k=4):
         update(self, h=h, v=v, k=k)
-        moves = [(x, y) for x in range(1, h+1)
-                 for y in range(1, v+1)]
+        moves = [(x, y) for x in range(h, h+1)
+                for y in range(1, v+1)]
         self.initial = Struct(to_move='X', utility=0, board={}, moves=moves)
 
     def actions(self, state):
@@ -47,6 +42,8 @@ class TicTacToe(Game):
         board[move] = state.to_move
         moves = list(state.moves)
         moves.remove(move)
+        if move[0] > 1:
+            moves.append((move[0] - 1, move[1]))
         return Struct(to_move=if_(state.to_move == 'X', 'O', 'X'),
                       utility=self.compute_utility(board, move, state.to_move),
                       board=board, moves=moves)
@@ -61,10 +58,13 @@ class TicTacToe(Game):
 
     def display(self, state):
         board = state.board
+        printBetweenRow(self)
         for x in range(1, self.h+1):
+            print('|', end=" ")
             for y in range(1, self.v+1):
-                print (board.get((x, y), '.'),end=" ")
+                print (board.get((x, y), ' ') + '|',end=" ")
             print()
+            printBetweenRow(self)
 
     def compute_utility(self, board, move, player):
         "If X wins with this move, return 1; if O, return -1; else return 0."
@@ -93,13 +93,10 @@ class TicTacToe(Game):
 
 #____________________________________________________________
 #
-print(play_game(TicTacToe(), random_player, random_player)) 
 
-"""
-print(play_game(TicTacToe(), tic_tac_query_player,random_player))
-print(play_game(TicTacToe(),tic_tac_query_player,alphabeta_player))
-print(play_game(TicTacToe(), random_player, random_player)) 
-print(play_game(TicTacToe(), alphabeta_player,alphabeta_player)) 
-"""
+#uses random_player function, unable to do intelligent_player
+# for i in range(0, 100):
+#     print(play_game(ConnectFour(), intelligent_player, random_player))
 
-#_____________________________________________________________
+for i in range(0, 100):
+    print(play_game(ConnectFour(), intelligent_player, intelligent_player)) 
