@@ -8,13 +8,13 @@ from utils import Dict, Struct, update, if_, num_or_str
 
 #Player for tic_tac_toe, more robust than default query player
 def tic_tac_query_player(game, state):
-    "Make a move by querying standard input."
-    tryAgain = True
-    while tryAgain:
-	    game.display(state)
-	    val = num_or_str(input('Your move, in format y (ranging from 1-7): '))
-
-    return val
+    while True:
+        game.display(state)
+        val = num_or_str(input('Your move, in format y (ranging from 1-7): '))
+        for x, y in state.moves:
+            if y == val:
+                return (x, y)
+        print("Illegal move, try again")
 
 def printBetweenRow(self):
     #print between rows
@@ -96,7 +96,7 @@ class TicTacToe(Game):
 
 print(play_game(TicTacToe(), random_player, random_player)) 
 
-# print(play_game(TicTacToe(), tic_tac_query_player,random_player))
-# print(play_game(TicTacToe(),tic_tac_query_player,alphabeta_player))
+print(play_game(TicTacToe(), tic_tac_query_player,random_player))
+print(play_game(TicTacToe(),tic_tac_query_player,alphabeta_player))
 print(play_game(TicTacToe(), random_player, random_player)) 
 print(play_game(TicTacToe(), alphabeta_player,alphabeta_player)) 
