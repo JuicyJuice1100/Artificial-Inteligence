@@ -126,14 +126,13 @@ def alphabeta_player(game, state):
 def alphabeta_full_player(game, state):
     return alphabeta_full_search(state, game)
     
-'''
 #A player that uses alphabeta_search intelligently
-def intelligent_player(game, state, cut, eval):
-    #eval = lambda state: game.compute_in_row(state.board, state.currentMove, state.player)
-    #cut = lambda state,depth: depth > 6 or game.terminal_test(state)
-    move = alphabeta_search(state, game, d=4, cutoff_test=cut, eval_fn=eval)
-    return move
-'''
+def intelligent_player(game, state):
+    # eval = lambda state: game.k_in_row(state.board, state.currentMove, state.player)
+    # cut = lambda state,depth: depth > 6 or game.terminal_test(state)
+    # move = alphabeta_search(state, game, d=4, cutoff_test=cut, eval_fn=eval)
+    # return move
+    return random_player(game, state)
     
 def play_game(game, *players):
     """Play an n-person, move-alternating game.

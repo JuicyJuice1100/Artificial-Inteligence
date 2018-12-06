@@ -1,20 +1,20 @@
 
 from games import Game, play_game
-from games import query_player, random_player, alphabeta_full_player,alphabeta_player
+from games import query_player, random_player, alphabeta_full_player,alphabeta_player,intelligent_player
 from utils import Dict, Struct, update, if_, num_or_str
 
 #_______________________________________________
-# Tic Tac Toe
+# Connect 4
 
-#Player for tic_tac_toe, more robust than default query player
-def tic_tac_query_player(game, state):
-    while True:
-        game.display(state)
-        val = num_or_str(input('Your move, in format y (ranging from 1-7): '))
-        for x, y in state.moves:
-            if y == val:
-                return (x, y)
-        print("Illegal move, try again")
+#query player for connect 4
+# def connectFourQueryplayer(game, state):
+#     while True:
+#         game.display(state)
+#         val = num_or_str(input('Your move, in format y (ranging from 1-7): '))
+#         for x, y in state.moves:
+#             if y == val:
+#                 return (x, y)
+#         print("Illegal move, try again")
 
 def printBetweenRow(self):
     #print between rows
@@ -23,7 +23,7 @@ def printBetweenRow(self):
         print("--+", end="")
     print()
     
-class TicTacToe(Game):
+class ConnectFour(Game):
     def __init__(self, h=6, v=7, k=4):
         update(self, h=h, v=v, k=k)
         moves = [(x, y) for x in range(h, h+1)
@@ -94,9 +94,9 @@ class TicTacToe(Game):
 #____________________________________________________________
 #
 
-print(play_game(TicTacToe(), random_player, random_player)) 
+#uses random_player function, unable to do intelligent_player
+# for i in range(0, 100):
+#     print(play_game(ConnectFour(), intelligent_player, random_player))
 
-print(play_game(TicTacToe(), tic_tac_query_player,random_player))
-print(play_game(TicTacToe(),tic_tac_query_player,alphabeta_player))
-print(play_game(TicTacToe(), random_player, random_player)) 
-print(play_game(TicTacToe(), alphabeta_player,alphabeta_player)) 
+for i in range(0, 100):
+    print(play_game(ConnectFour(), intelligent_player, intelligent_player)) 
